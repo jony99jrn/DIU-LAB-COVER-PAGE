@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const studentName = document.getElementById('studentName').value.trim() || 'Jony Roy';
     const studentId = document.getElementById('studentId').value.trim() || '262-15-952';
     const section = document.getElementById('section').value.trim() || '72_S';
-    const semester = document.getElementById('semester').value.trim() || 'Summer 2026';
+    const semester = document.getElementById('semester').value.trim() || 'Fall 2026';
     const studentDept = document.getElementById('studentDept').value.trim() || 'Computer Science and Engineering';
 
     const subDateVal = document.getElementById('subDate').value;
