@@ -57,45 +57,81 @@ window.addEventListener('DOMContentLoaded', () => {
     formScreen.style.setProperty('display', 'flex', 'important');
   });
 
-  downloadBtn.addEventListener('click', () => {
-    const element = document.getElementById('coverPage');
+  // Capture the cover page from a fixed-size off-screen copy (A4 at 96dpi),
+  // so the result never depends on the phone/laptop screen width or zoom.
+  const PAGE_W = 794;   // 210mm
+  const PAGE_H = 1115;  // 295mm
 
-    const options = {
-      margin: 0,
-      filename: 'DIU_Lab_Report_Cover_Page.pdf',
-      image: { type: 'jpeg', quality: 1.0 },
-      html2canvas: {
-        scale: 2,
+  async function renderCoverCanvas(scale) {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+
+    const source = document.getElementById('coverPage');
+    const stage = document.createElement('div');
+    stage.style.cssText =
+      'position:fixed;left:-10000px;top:0;width:' + PAGE_W + 'px;height:' + PAGE_H + 'px;' +
+      'overflow:hidden;pointer-events:none;';
+
+    const clone = source.cloneNode(true);
+    clone.style.width = PAGE_W + 'px';
+    clone.style.height = PAGE_H + 'px';
+    clone.style.margin = '0';
+    clone.style.boxShadow = 'none';
+    clone.style.transform = 'none';
+
+    stage.appendChild(clone);
+    document.body.appendChild(stage);
+
+    try {
+      return await html2canvas(clone, {
+        scale: scale,
         useCORS: true,
+        backgroundColor: '#ffffff',
+        width: PAGE_W,
+        height: PAGE_H,
+        windowWidth: PAGE_W,
+        windowHeight: PAGE_H,
+        scrollX: 0,
         scrollY: 0
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+      });
+    } finally {
+      document.body.removeChild(stage);
+    }
+  }
 
-    html2pdf().set(options).from(element).save();
+  function withBusy(btn, work) {
+    const label = btn.innerHTML;
+    btn.innerHTML = 'Preparing…';
+    btn.disabled = true;
+    return work()
+      .catch(() => alert('Could not generate the file. Please try again.'))
+      .finally(() => {
+        btn.innerHTML = label;
+        btn.disabled = false;
+      });
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    withBusy(downloadBtn, async () => {
+      const canvas = await renderCoverCanvas(2);
+      const options = {
+        margin: 0,
+        filename: 'DIU_Lab_Report_Cover_Page.pdf',
+        image: { type: 'jpeg', quality: 1.0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      await html2pdf().set(options).from(canvas, 'canvas').save();
+    });
   });
 
   downloadImgBtn.addEventListener('click', () => {
-    const element = document.getElementById('coverPage');
-    const originalLabel = downloadImgBtn.innerHTML;
-    downloadImgBtn.innerHTML = 'Preparing…';
-    downloadImgBtn.disabled = true;
-
-    html2canvas(element, {
-      scale: 3,
-      useCORS: true,
-      scrollY: 0
-    }).then((canvas) => {
+    withBusy(downloadImgBtn, async () => {
+      const canvas = await renderCoverCanvas(3);
       const link = document.createElement('a');
       link.download = 'DIU_Lab_Report_Cover_Page.png';
       link.href = canvas.toDataURL('image/png', 1.0);
       link.click();
-      downloadImgBtn.innerHTML = originalLabel;
-      downloadImgBtn.disabled = false;
-    }).catch(() => {
-      downloadImgBtn.innerHTML = originalLabel;
-      downloadImgBtn.disabled = false;
-      alert('Could not generate the image. Please try again.');
     });
   });
 });
