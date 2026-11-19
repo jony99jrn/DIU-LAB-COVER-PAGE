@@ -1,3 +1,8 @@
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 :root {
   --bg: #FAF3E1;
   --surface: #F5E7C6;
@@ -237,7 +242,10 @@ body {
   padding: 8mm;
   box-shadow: 0 10px 30px rgba(34, 34, 34, 0.18);
   box-sizing: border-box;
-  font-family: 'Times New Roman', Times, serif;
+  flex-shrink: 0;
+  font-family: 'Tinos', 'Times New Roman', Times, serif;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
 }
 
 #pageBorder {
