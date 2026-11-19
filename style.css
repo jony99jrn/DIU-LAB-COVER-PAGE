@@ -296,7 +296,7 @@ body {
 
 .report-header {
   text-align: center;
-  font-size: 23pt;
+  font-size: 26pt;
   font-weight: bold;
   font-style: italic;
   color: #1e3a8a;
@@ -305,8 +305,8 @@ body {
 
 .course-info {
   width: 100%;
-  font-size: 15pt;
-  line-height: 1.7;
+  font-size: 17.5pt;
+  line-height: 1.55;
   color: #000000;
   padding-left: 10px;
 }
@@ -318,8 +318,8 @@ body {
 
 .submission-block {
   padding-left: 10px;
-  font-size: 14.5pt;
-  line-height: 1.6;
+  font-size: 17pt;
+  line-height: 1.45;
   color: #000000;
 }
 
@@ -333,7 +333,7 @@ body {
 }
 
 .sub-heading {
-  font-size: 17pt;
+  font-size: 20pt;
   font-weight: bold;
   font-style: italic;
   color: #1e3a8a;
@@ -351,12 +351,12 @@ body {
   border: 1.5px solid #1e3a8a;
   padding: 6px 28px;
   border-radius: 25px;
-  font-size: 14pt;
+  font-size: 16pt;
   color: #1e3a8a;
 }
 
 /* MOBILE MEDIA QUERY ENHANCEMENTS */
-@media (max-width: 600px) {
+media (max-width: 600px) {
   .form-card-section {
     padding: 16px;
   }
